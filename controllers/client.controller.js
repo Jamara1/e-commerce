@@ -1,11 +1,18 @@
 "use strict";
 
-let client = require("../models/client");
+let client = require("../models/client.model");
 let bcrypt = require("bcrypt-nodejs");
 
 const CLIENT_REGISTER = async function (request, response) {
   let data = request.body;
   let clientArray = [];
+
+  if (!data.identity) {
+    response
+      .status(200)
+      .send({ message: "No identity number", data: undefined });
+    return;
+  }
 
   clientArray = await client.find({ email: data.email });
 
