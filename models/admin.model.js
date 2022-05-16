@@ -9,8 +9,8 @@ let adminShema = shema({
   lastname: { type: String, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
-  phone: { type: String, required: false },
-  rol: { type: String, required: false },
+  phone: { type: String, required: true },
+  rol: { type: String, required: true },
 });
 
 module.exports = mongoose.model("admin", adminShema);
