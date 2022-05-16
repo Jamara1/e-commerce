@@ -1,7 +1,7 @@
 'use strict';
 
 let express = require('express');
-let clientController = require('../controllers/clientController');
+let clientController = require('../controllers/client.controller');
 
 let api = express.Router();
 
