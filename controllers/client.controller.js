@@ -1,7 +1,8 @@
 "use strict";
 
-let client = require("../models/client.model");
 let bcrypt = require("bcrypt-nodejs");
+let client = require("../models/client.model");
+let jwt = require("../helpers/jwt");
 
 const CLIENT_REGISTER = async function (request, response) {
   let data = request.body;
@@ -73,7 +74,8 @@ const CLIENT_LOGIN = async function(request, response) {
       }
 
       response.status(200).send({
-        data: user
+        data: user,
+        _token: jwt.createToken(user)
       });
     }
   );

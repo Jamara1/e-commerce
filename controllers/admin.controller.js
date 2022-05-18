@@ -1,7 +1,8 @@
 "use strict";
 
-let admin = require("../models/admin.model");
 let bcrypt = require("bcrypt-nodejs");
+let admin = require("../models/admin.model");
+let jwt = require("../helpers/jwt");
 
 const ADMIN_REGISTER = async function (request, response) {
   let data = request.body;
@@ -71,6 +72,7 @@ const ADMIN_LOGIN = async function (request, response) {
 
     response.status(200).send({
       data: user,
+      _token: jwt.createToken(user)
     });
   });
 };
