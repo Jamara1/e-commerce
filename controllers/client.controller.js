@@ -40,6 +40,46 @@ const CLIENT_REGISTER = async function (request, response) {
   });
 };
 
+const CLIENT_LOGIN = async function(request, response) {
+  let data = request.body;
+  let clientArray = [];
+
+  clientArray = await client.find({ 
+    email: data.email
+  });
+
+  if (clientArray.length === 0) {
+    response.status(200).send({
+      message: "E-mail not found",
+      data: undefined
+    });
+
+    return;
+  }
+  
+  let user = clientArray[0];
+
+  bcrypt.compare(
+    data.password,
+    user.password,
+    async function (error, check) {
+      if (!check) {
+        response.status(200).send({
+          message: "Incorrect password",
+          data: undefined,
+        });
+
+        return;
+      }
+
+      response.status(200).send({
+        data: user
+      });
+    }
+  );
+};
+
 module.exports = {
   CLIENT_REGISTER,
+  CLIENT_LOGIN,
 };
