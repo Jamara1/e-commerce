@@ -40,6 +40,42 @@ const ADMIN_REGISTER = async function (request, response) {
   });
 };
 
+const ADMIN_LOGIN = async function (request, response) {
+  let data = request.body;
+  let adminArray = [];
+
+  adminArray = await admin.find({
+    email: data.email,
+  });
+
+  if (adminArray.length === 0) {
+    response.status(200).send({
+      message: "E-mail not found",
+      data: undefined,
+    });
+
+    return;
+  }
+
+  let user = adminArray[0];
+
+  bcrypt.compare(data.password, user.password, async function (error, check) {
+    if (!check) {
+      response.status(200).send({
+        message: "Incorrect password",
+        data: undefined,
+      });
+
+      return;
+    }
+
+    response.status(200).send({
+      data: user,
+    });
+  });
+};
+
 module.exports = {
   ADMIN_REGISTER,
+  ADMIN_LOGIN,
 };
