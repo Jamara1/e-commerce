@@ -26,7 +26,11 @@ export class AuthComponent implements OnInit {
     this.token = _adminService.getToken();
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    if (this.token) {
+      this._router.navigate(['/panel/home']);
+    }
+  }
 
   login(form: NgForm) {
     if (!form.valid) {

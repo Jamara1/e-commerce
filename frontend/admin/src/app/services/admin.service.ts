@@ -43,9 +43,6 @@ export class AdminService {
       const helper = new JwtHelperService();
       decodedToken = helper.decodeToken(token);
 
-      console.log(decodedToken);
-
-
       if (!decodedToken) {
         localStorage.removeItem('token');
         return false;
