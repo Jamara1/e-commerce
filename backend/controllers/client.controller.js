@@ -41,47 +41,73 @@ const CLIENT_REGISTER = async function (request, response) {
   });
 };
 
-const CLIENT_LOGIN = async function(request, response) {
+const CLIENT_LOGIN = async function (request, response) {
   let data = request.body;
   let clientArray = [];
 
-  clientArray = await client.find({ 
-    email: data.email
+  clientArray = await client.find({
+    email: data.email,
   });
 
   if (clientArray.length === 0) {
     response.status(200).send({
       message: "E-mail not found",
-      data: undefined
+      data: undefined,
     });
 
     return;
   }
-  
+
   let user = clientArray[0];
 
-  bcrypt.compare(
-    data.password,
-    user.password,
-    async function (error, check) {
-      if (!check) {
-        response.status(200).send({
-          message: "Incorrect password",
-          data: undefined,
-        });
-
-        return;
-      }
-
+  bcrypt.compare(data.password, user.password, async function (error, check) {
+    if (!check) {
       response.status(200).send({
-        data: user,
-        _token: jwt.createToken(user)
+        message: "Incorrect password",
+        data: undefined,
+      });
+
+      return;
+    }
+
+    response.status(200).send({
+      data: user,
+      _token: jwt.createToken(user),
+    });
+  });
+};
+
+const CLIENT_LIST_ADMIN = async function (request, response) {
+  let type = request.params["type"];
+  let filter = request.params["filter"];
+
+  if (type === null || type === "null") {
+    let register = await client.find();
+    response.status(200).send({
+      data: register,
+    });
+  } else {
+    if (type === "firstname") {
+      let register = await client.find({ firstname: new RegExp(filter, "i") });
+      response.status(200).send({
+        data: register,
+      });
+    } else if (type === "lastname") {
+      let register = await client.find({ lastname: new RegExp(filter, "i") });
+      response.status(200).send({
+        data: register,
+      });
+    } else if (type === "email") {
+      let register = await client.find({ email: new RegExp(filter, "i") });
+      response.status(200).send({
+        data: register,
       });
     }
-  );
+  }
 };
 
 module.exports = {
   CLIENT_REGISTER,
   CLIENT_LOGIN,
+  CLIENT_LIST_ADMIN,
 };
