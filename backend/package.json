@@ -1,7 +1,7 @@
 {
   "name": "projects",
   "version": "1.0.0",
-  "description": "",
+  "description": "E-commerce project",
   "main": "index.js",
   "scripts": {
     "start": "nodemon app.js",

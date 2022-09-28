@@ -10,8 +10,15 @@ const CLIENT_REGISTER = async function (request, response) {
 
   if (!data.identity) {
     response
-      .status(200)
+      .status(400)
       .send({ message: "No identity number", data: undefined });
+    return;
+  }
+
+  if (!data.email) {
+    response
+      .status(400)
+      .send({ message: "No e-mail", data: undefined });
     return;
   }
 
@@ -19,19 +26,19 @@ const CLIENT_REGISTER = async function (request, response) {
 
   if (clientArray.length > 0) {
     response
-      .status(200)
+      .status(400)
       .send({ message: "This email already exists", data: undefined });
     return;
   }
 
   if (!data.password) {
-    response.status(200).send({ message: "No password", data: undefined });
+    response.status(400).send({ message: "No password", data: undefined });
     return;
   }
 
   bcrypt.hash(data.password, null, null, async function (error, hash) {
     if (!hash) {
-      response.status(200).send({ message: "Error server", data: undefined });
+      response.status(500).send({ message: "Error server: error encrypt password", data: undefined });
       return;
     }
 
@@ -50,7 +57,7 @@ const CLIENT_LOGIN = async function (request, response) {
   });
 
   if (clientArray.length === 0) {
-    response.status(200).send({
+    response.status(400).send({
       message: "E-mail not found",
       data: undefined,
     });
@@ -62,7 +69,7 @@ const CLIENT_LOGIN = async function (request, response) {
 
   bcrypt.compare(data.password, user.password, async function (error, check) {
     if (!check) {
-      response.status(200).send({
+      response.status(400).send({
         message: "Incorrect password",
         data: undefined,
       });
